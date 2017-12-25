@@ -45,6 +45,18 @@
       <input-textarea v-model="attrs.actual" :title="i18n('actual-title')" required/>
     </div>
 
+    <div v-for="(item, index) in dependencies" :key="index" class="col-12 col-lg-6">
+      <input-typeahead
+          v-model="attrs.dependVersions[index]"
+          :title="item.name + i18n('dependency-version-title')"
+          :suggestions="dependSuggestions[index] || defaultSuggestions"
+          :search="{
+          sort: [{ field: 'index', direction: 'asc' }],
+          empty_sort: [{ field: 'index', direction: 'asc' }],
+          limit: 10
+        }"/>
+    </div>
+
     <div class="col-12">
       <input-textarea v-model="attrs.extra"
         :title="i18n('extra-title')"
@@ -64,6 +76,7 @@
 
 <script>
 import { versionCompare, generate, updateQuery } from '../helpers'
+import { repos } from '../config'
 
 export default {
   props: ['repo'],
@@ -72,31 +85,34 @@ export default {
     show: false,
     attrs: {
       version: '',
+      dependVersions: [],
       reproduction: '',
       steps: '',
       expected: '',
       actual: '',
-      extra: ''
+      extra: '',
     },
-    versions: {}
+    versions: {},
+    dependencies: [],
+    dependSuggestions: [],
+    defaultSuggestions: [{ name: 'Loading...' }]
   }),
 
   computed: {
     suggestions () {
-      const repo = this.repo
+      return this.suggestHandle(this.repo, this.versions)
+    },
+    dependSuggestions () {
+      const dependencies = this.dependencies
       const versions = this.versions
 
-      if (!(repo in versions)) return [{ name: 'Loading...' }]
-
-      return versions[repo].slice()
-          .sort((a, b) => -versionCompare(a.id, b.id))
-          .map((a, index) => (Object.assign({}, a, { index })))
+      return dependencies.map((item) => (suggestHandle(item.id, versions)))
     }
   },
 
   methods: {
-    async fetchVersions (page = 1) {
-      const response = await this.$http.get(`https://api.github.com/repos/${this.repo}/releases`, {
+    async fetchVersions (repo, index, page = 1) {
+      const response = await this.$http.get(`https://api.github.com/repos/${repo}/releases`, {
         params: {
           page,
           per_page: 100
@@ -106,23 +122,28 @@ export default {
 
       if (!versions || !(versions instanceof Array)) return false
 
-      if (!(this.repo in this.versions)) {
-        this.$set(this.versions, this.repo, [])
+      if (!(repo in this.versions)) {
+        this.$set(this.versions, repo, [])
       }
 
-      this.versions[this.repo].push(
+      this.versions[repo].push(
           ...versions.map(v => (/^v/.test(v.tag_name) ? v.tag_name.substr(1) : v.tag_name))
               .map(name => ({ id: name, name }))
       )
 
       if (page === 1) {
-        this.attrs.version = this.versions[this.repo].length ? this.versions[this.repo][0].id : ''
+        const version = this.versions[repo].length ? this.versions[repo][0].id : ''
+        if (index === -1) {
+          this.attrs.version = version
+        } else {
+          this.attrs.dependVersions[index] = version
+        }
       }
 
       const link = response.headers.get('Link')
 
       if (link && link.indexOf('rel="next"') > -1) {
-        this.fetchVersions(page + 1)
+        this.fetchVersions(repo, page + 1)
       }
     },
 
@@ -147,19 +168,46 @@ ${actual}
 
 ${extra ? `---\n${extra}` : ''}
   `.trim())
+    },
+    deepFetchVersions () {
+      this.fetchVersions(this.repo, -1)
+
+      const repo = repos.find((item) => {
+        return item.id === this.repo
+      })
+
+      if (repo.dependencies) {
+        this.dependencies = repo.dependencies
+        repo.dependencies.forEach((item, index) => {
+          this.fetchVersions(item.id, index)
+        })
+      } else {
+        this.dependencies = []
+      }
+    },
+    updateSuggestion () {
+      this.attrs.version = this.versions[this.repo][0].id
+      this.attrs.dependVersions = this.dependencies.map((item) => (this.versions[item.id][0].id))
+    },
+    suggestHandle (repo, versions) {
+      if (!(repo in versions)) return [{ name: 'Loading...' }]
+
+      return versions[repo].slice()
+        .sort((a, b) => -versionCompare(a.id, b.id))
+        .map((a, index) => (Object.assign({}, a, { index })))
     }
   },
 
   created () {
-    this.fetchVersions()
+    this.deepFetchVersions()
   },
 
   watch: {
     repo (repo) {
       if (!this.versions[repo]) {
-        this.fetchVersions()
+        this.deepFetchVersions()
       } else {
-        this.attrs.version = this.versions[repo][0].id
+        this.updateSuggestion()
       }
       updateQuery({ repo })
     }

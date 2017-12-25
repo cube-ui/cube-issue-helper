@@ -25,6 +25,7 @@ module.exports = {
 
   'expected-title': 'What is expected?',
   'actual-title': 'What is actually happening?',
+  'dependency-version-title': ' Version (optional)',
   'extra-title': 'Any additional comments? (optional)',
   'extra-subtitle': 'e.g. some background/context of how you ran into this bug.',
 

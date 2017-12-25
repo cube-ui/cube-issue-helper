@@ -25,6 +25,7 @@ module.exports = {
 
   'expected-title': '期望的结果是什么？',
   'actual-title': '实际的结果是什么？',
+  'dependency-version-title': ' 版本 (可选)',
   'extra-title': '补充说明（可选）',
   'extra-subtitle': '比如：遇到这个 bug 的业务场景、上下文。',
 
