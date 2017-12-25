@@ -2,7 +2,7 @@
   <nav class="navbar navbar-light fixed-top bg-faded mb-3">
     <div class="container d-flex">
       <a class="navbar-brand" href="#">
-        <img src="../assets/images/logo.png" alt="Vue's logo" height="24"> Issue Helper</a>
+        <img class="logo" src="https://static.galileo.xiaojukeji.com/static/tms/shield/z/mofang/mofang/images/mofang_logo.png" alt="Cube's logo" height="24"> Issue Helper</a>
 
       <ul class="navbar-nav ml-auto d-flex flex-row">
         <li v-for="(locale, _lang) in $root.$locales" class="nav-item px-2">
@@ -28,6 +28,11 @@ export default {
 <style lang="scss">
 .navbar {
   border-bottom: 1px solid #eee;
+}
+
+
+.logo {
+ margin-right: 5px
 }
 
 .nav-link {

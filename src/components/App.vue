@@ -99,7 +99,7 @@
       Built with
       <a href="https://github.com/vuejs/vue-cli">vue-cli</a>
       &centerdot;
-      Check out source on <a href="https://github.com/vuejs/vue-issue">GitHub</a>
+      Check out source on <a href="https://github.com/cube-ui/cube-issue-helper">GitHub</a>
     </small>
   </footer>
 </div>
@@ -178,7 +178,7 @@ export default {
   },
 
   created () {
-    this.repo = getQuery().repo || 'vuejs/vue'
+    this.repo = getQuery().repo || 'didi/cube-ui'
   },
 }
 </script>

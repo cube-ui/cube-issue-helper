@@ -1,8 +1,8 @@
 {
-  "name": "vue-issue-helper",
-  "description": "Vue issue helper",
+  "name": "cube-issue-helper",
+  "description": "Cube issue helper",
   "version": "1.0.0",
-  "author": "Evan You <yyx990803@gmail.com>",
+  "author": "Amy Fox <funan_amy@foxmail.com>",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
