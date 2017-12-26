@@ -6,7 +6,7 @@
 
 对于使用中遇到的问题，请使用以下资源：
 
-- 仔细阅读文档 [cube-ui 文档](https://didi.github.io/cube-ui/#/zh-CN/docs/introduction)、[better-scroll 文档](https://ustbhuangyi.github.io/better-scroll/doc/zh-hans/)
+- 仔细阅读文档 [cube-ui 文档](https://didi.github.io/cube-ui/#/zh-CN/docs/)、[better-scroll 文档](https://ustbhuangyi.github.io/better-scroll/doc/zh-hans/)
 - 到官方交流群提问 [cube-ui 交流群](https://github.com/didi/cube-ui/blob/dev/assets/cube-qq-QR.jpg)、[better-scroll 交流群](https://camo.githubusercontent.com/741151fe9639b674cabcf5b0c36d030c5c22fff4/687474703a2f2f7765626170702e646964697374617469632e636f6d2f7374617469632f7765626170702f736869656c642f6265747465722d7363726f6c6c2d71712e6a7067)
 - 在 [Stack Overflow](https://stackoverflow.com) (英文) 或是 [SegmentFault](https://segmentfault.com)（中文）搜索和提问
 

@@ -96,8 +96,8 @@
   <footer class="text-center text-muted mb-3">
     <p>&hellip;</p>
     <small>
-      Built with
-      <a href="https://github.com/vuejs/vue-cli">vue-cli</a>
+      Thanks for
+      <a href="https://github.com/vuejs/vue-issue-helper">vue-issue-helper</a>
       &centerdot;
       Check out source on <a href="https://github.com/cube-ui/cube-issue-helper">GitHub</a>
     </small>
