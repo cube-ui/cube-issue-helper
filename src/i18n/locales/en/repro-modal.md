@@ -14,7 +14,7 @@ Some users would give us a link to a real project and hope we can help them figu
 
 - You are already familiar with your codebase, but we are not. It is extremely time-consuming to hunt a bug in a big and unfamiliar codebase.
 
-- The problematic behavior may very well be caused by your code rather than by a bug in Vue.
+- The problematic behavior may very well be caused by your code rather than by a bug in our lib.
 
 A **minimal** reproduction means it demonstrates the bug, and the bug only. It should only contain the bare minimum amount of code that can reliably cause the bug. Try your best to get rid of anything that aren't directly related to the problem.
 

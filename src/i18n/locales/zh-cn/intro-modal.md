@@ -1,6 +1,6 @@
-维护开源项目，尤其是流行的项目，是[非常辛苦的工作](https://nolanlawson.com/2017/03/05/what-it-feels-like-to-be-an-open-source-maintainer/)。随着 Vue 在社区越来越受欢迎，我们每天都在收到越来越多的问题， bug 报告，功能需求和 Pull Requests。
+维护开源项目，是[比较辛苦的工作](https://nolanlawson.com/2017/03/05/what-it-feels-like-to-be-an-open-source-maintainer/)。随着越来越多人的使用，我们收到的问题每天也在不断增多， bug 报告，功能需求和 Pull Requests。
 
-作为一个完全免费使用的开源项目，Vue 的维护人手是有限的。这意味着想要让项目长期的可持续发展，我们必须：
+作为一个完全免费使用的开源项目，我们的维护人手是有限的。这意味着想要让项目长期的可持续发展，我们必须：
 
 1. 给予更具体的工作更高的优先级（比如 bug 的修复和新功能的开发）；
 2. 提高 issue 处理的效率。
