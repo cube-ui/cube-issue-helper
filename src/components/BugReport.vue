@@ -45,11 +45,11 @@
       <input-textarea v-model="attrs.actual" :title="i18n('actual-title')" required/>
     </div>
 
-    <div v-for="(item, index) in dependencies" :key="index" class="col-12 col-lg-6">
+    <div v-for="(item, index) in attrs.dependencies" :key="index" class="col-12 col-lg-6">
       <input-typeahead
           v-model="attrs.dependVersions[index]"
           :title="item.name + i18n('dependency-version-title')"
-          :suggestions="dependSuggestions[index] || defaultSuggestions"
+          :suggestions="dependSuggestions[index]"
           :search="{
           sort: [{ field: 'index', direction: 'asc' }],
           empty_sort: [{ field: 'index', direction: 'asc' }],
@@ -85,6 +85,7 @@ export default {
     show: false,
     attrs: {
       version: '',
+      dependencies: [],
       dependVersions: [],
       reproduction: '',
       steps: '',
@@ -92,10 +93,7 @@ export default {
       actual: '',
       extra: '',
     },
-    versions: {},
-    dependencies: [],
-    dependSuggestions: [],
-    defaultSuggestions: [{ name: 'Loading...' }]
+    versions: {}
   }),
 
   computed: {
@@ -103,10 +101,7 @@ export default {
       return this.suggestHandle(this.repo, this.versions)
     },
     dependSuggestions () {
-      const dependencies = this.dependencies
-      const versions = this.versions
-
-      return dependencies.map((item) => (suggestHandle(item.id, versions)))
+      return this.attrs.dependencies.map((item) => (this.suggestHandle(item.id, this.versions)))
     }
   },
 
@@ -130,6 +125,7 @@ export default {
           ...versions.map(v => (/^v/.test(v.tag_name) ? v.tag_name.substr(1) : v.tag_name))
               .map(name => ({ id: name, name }))
       )
+      this.versions = Object.assign({}, this.versions)
 
       if (page === 1) {
         const version = this.versions[repo].length ? this.versions[repo][0].id : ''
@@ -143,12 +139,20 @@ export default {
       const link = response.headers.get('Link')
 
       if (link && link.indexOf('rel="next"') > -1) {
-        this.fetchVersions(repo, page + 1)
+        this.fetchVersions(repo, index, page + 1)
       }
     },
 
     generate () {
-      const { version, reproduction, steps, expected, actual, extra } = this.attrs
+      const { version, reproduction, steps, expected, actual, dependencies, dependVersions, extra } = this.attrs
+      let dependenciesStr = ''
+
+      if (dependencies.length) {
+        dependenciesStr = '### Dependencies Version\n'
+        dependencies.forEach((item, index) => {
+          dependenciesStr += `${item.name}: ${dependVersions[index] || ''}\n`
+        })
+      }
 
       return generate(`
 ### Version
@@ -166,6 +170,8 @@ ${expected}
 ### What is actually happening?
 ${actual}
 
+${dependenciesStr}
+
 ${extra ? `---\n${extra}` : ''}
   `.trim())
     },
@@ -177,17 +183,17 @@ ${extra ? `---\n${extra}` : ''}
       })
 
       if (repo.dependencies) {
-        this.dependencies = repo.dependencies
+        this.attrs.dependencies = repo.dependencies
         repo.dependencies.forEach((item, index) => {
           this.fetchVersions(item.id, index)
         })
       } else {
-        this.dependencies = []
+        this.attrs.dependencies = []
       }
     },
     updateSuggestion () {
       this.attrs.version = this.versions[this.repo][0].id
-      this.attrs.dependVersions = this.dependencies.map((item) => (this.versions[item.id][0].id))
+      this.attrs.dependVersions = this.attrs.dependencies.map((item) => (this.versions[item.id][0].id))
     },
     suggestHandle (repo, versions) {
       if (!(repo in versions)) return [{ name: 'Loading...' }]
